@@ -1,0 +1,32 @@
+{
+  "name": "shrexpo",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "dev": "node --env-file=.env --watch index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [],
+  "author": "Ján Václav <xvaclav@fi.muni.cz>",
+  "license": "AGPL-3.0",
+  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b",
+  "dependencies": {
+    "@mjackson/multipart-parser": "^0.6.3",
+    "buffer-replace": "^1.0.0",
+    "compression": "^1.7.5",
+    "express": "^4.21.1",
+    "form-data": "^4.0.1",
+    "morgan": "^1.10.0",
+    "parse-multipart-data": "^1.5.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "parse-multipart-data": "patches/parse-multipart-data.patch"
+    }
+  }
+}

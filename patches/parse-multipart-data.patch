@@ -1,0 +1,14 @@
+diff --git a/dist/multipart.js b/dist/multipart.js
+index 02c2ef120d7cd43f7ce06c8e6cccc9b4335fdd21..db1cd1ccfe5196a45b7de1d1a2805e5df215cb10 100644
+--- a/dist/multipart.js
++++ b/dist/multipart.js
+@@ -168,6 +168,9 @@ function process(part) {
+     var input = {};
+     if (filenameData) {
+         input = obj(filenameData);
++    }
++
++    if (part.contentTypeHeader) {
+         var contentType = part.contentTypeHeader.split(':')[1].trim();
+         Object.defineProperty(input, 'type', {
+             value: contentType,
