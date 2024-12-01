@@ -1,0 +1,21 @@
+services:
+  patcher-server:
+    build: .
+    init: true
+    env_file: .env
+    ports:
+      - 443:4443
+    volumes:
+      - ./certs:/certs:ro
+  fake-dns:
+    image: strm/dnsmasq
+    ports:
+      - 53:53/udp
+      - 53:53/tcp
+    cap_add:
+      - NET_ADMIN
+    entrypoint: >
+        sh -c "dnsmasq -d \
+        --address=/[replace with EXPO_ORIGINAL_DOMAIN]/[replace with IP of this machine] \
+        --log-facility=- \
+        --log-queries"

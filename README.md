@@ -19,21 +19,25 @@ different operating system, please reconsider.
 
 To run the server, you'll first need to install openssl, [Node.js](https://node.js) >=20 and pnpm >=9
 onto your system. If you have these programs, you may run `./generate-ca.sh <domain>`, where `<domain>`
-is the domain you got from EXPO_UPDATE_URL.
+is the domain you got from EXPO_UPDATE_URL. You may also use Docker and the attached `compose.yml` file
+to run this project in a container, along with a DNS server for spoofing the update server IP, in which
+case you do not need to install any of the abovementioned software.
 
 This script will generate a self-signed CA for the server, as well as an .env file. Before starting
 the server, you will need to add a few more entries to the .env file. These entries are:
+- `PORT` - this should be `443` if you intend to actually use this to intercept updates.
+           otherwise, it can be set to something like `4443` in order to be able to run it
+           as a non-root user.
 - `ORIGIN` - the base path where this server will be accessible, used for the modified asset URL in
-             the manifest. I recommend this to be served using a legitimate certificate, as the app
-             may face difficulties downloading the patch otherwise. To avoid having to request your
-             own certificate, I recommend using `cloudflared` and its free `tunnel` option.
+             the manifest. I recommend this to be the URL of the `EXPO_ORIGINAL_DOMAIN`
+             (e.g. if your `EXPO_ORIGINAL_DOMAIN` is `bla.example`, then ORIGIN should be `https://bla.example/`).
 - `SEARCH_STRING` - The string which will be searched in the binary blob
 - `REPLACE_STRING` - The string which will replace `SEARCH_STRING`
 
 An example of such file is provided in `.env.example`. Once the environment file is configured, you may
-run `pnpm run start` to start the patcher server. You will then need to install the root certificate
-found in `certs/root.crt` onto the Android device, and somehow intercept its request to the original
-update server.
+run `pnpm run start` (or `docker compose up -d`) to start the patcher server. You will then need to
+install the root certificate found in `certs/root.crt` onto the Android device, and somehow intercept
+its request to the original update server.
 
 ## Caveats
 The patcher, in its current state, only works in the following conditions (from most to least work-around-able):
