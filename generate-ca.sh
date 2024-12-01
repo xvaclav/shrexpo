@@ -18,12 +18,28 @@ fi
 
 # Domain certificate
 if [ ! -f "$1.key" ]; then
+
+## Many thanks to:
+## https://gist.github.com/KeithYeh/bb07cadd23645a6a62509b1ec8986bbc
+    cat << EOF >v3.ext
+
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints       = CA:TRUE
+keyUsage               = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign
+subjectAltName         = DNS:$1
+issuerAltName          = issuer:copy
+
+EOF
     openssl genrsa -out "$1.key" 2048
     openssl req -new -sha256 -key "$1.key" -subj "/C=US/ST=CA/O=shrexpo/CN=$1" -out "$1.csr"
-    openssl x509 -req -in "$1.csr" -CA root.crt -CAkey root.key -CAcreateserial -out "$1.crt" -days 500 -sha256
+    openssl x509 -req -in "$1.csr" -CA root.crt -CAkey root.key -CAcreateserial -out "$1.crt" -days 500 -sha256 -extfile v3.ext
 fi
 
 # env
 cd ..;
-echo "EXPO_ORIGINAL_DOMAIN=$1" > .env
+if [ ! -f ".env" ]; then
+    echo "EXPO_ORIGINAL_DOMAIN=$1" > .env
+fi
+
 echo "Now you can run: pnpm run start"
