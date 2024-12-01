@@ -37,9 +37,11 @@ EOF
 fi
 
 # env
+set +x
 cd ..;
 if [ ! -f ".env" ]; then
     echo "EXPO_ORIGINAL_DOMAIN=$1" > .env
 fi
 
-echo "Now you can run: pnpm run start"
+echo '.env file created; add the remaining fields to it, and then run `pnpm run start`'
+echo '(or docker compose up -d)'
